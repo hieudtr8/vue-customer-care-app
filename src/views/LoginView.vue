@@ -7,11 +7,11 @@
           <form @submit.prevent="handleSubmit">
             <div class="input-container">
               <label for="email">Tên đăng nhập</label>
-              <input type="email" name="email" v-model="email">
+              <input type="email" name="email" placeholder="example@gmail.com" v-model="email">
             </div>
             <div class="input-container">
               <label for="password">Mật khẩu</label>
-              <input type="password" v-model="password" name="password">
+              <input class="password" type="password" v-model="password" placeholder="********" name="password">
             </div>
             <div class="input-container-checkbox">
               <input type="checkbox" name="remember-me" id="remember-me">
@@ -21,7 +21,6 @@
           </form>
         </div>
       </div>
-      <img src="../../public/login-image.png" alt="">
     </div>
   </div>
 
@@ -51,36 +50,35 @@ export default {
 <style scoped>
 h2 {
   color: #F57212;
-  font-size: 32px;
+  font-size: 43px;
   font-weight: normal;
   margin-bottom: 40px;
 }
 
 .container {
+  margin-top: 5%;
   position: relative;
-  height: 700px;
+  height: 800px; 
 }
 
 .login-wrapper {
+  background-image: url('../../public/login-image.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 85%;
-}
-
-.login-wrapper img {
-  max-width: 60%;
-  z-index: -1;
+  width: 70%;
+  height: 100%;
 }
 
 .login-modal {
   position: absolute;
-  z-index: 1;
-  left: 10%;
   background-color: #FFFCFC;
   height: 100%;
-  width: 35%;
+  width: 48%;
   box-shadow: 0px 6px 15px rgb(0 0 0 / 50%);
   border-radius: 30px;
 }
@@ -94,11 +92,11 @@ h2 {
 
 .input-container,
 .input-container-checkbox {
-  margin-top: 15px;
+  margin-top: 18px;
 }
 
 .input-container-checkbox label {
-  font-size: 13px;
+  font-size: 20px;
 }
 
 .input-container-checkbox label,
@@ -107,17 +105,23 @@ h2 {
 }
 
 .input-container label {
+  font-size: 28px;
   display: block;
+}
+
+.input-container input::placeholder {
+  color: #CECDCD;
 }
 
 .input-container input[type=email],
 .input-container input[type=password] {
   width: 100%;
+  font-size: 28px;
   border: 1px solid #CECDCD;
-  height: 45px;
+  height: 72px;
   border-radius: 15px;
   margin-top: 18px;
-  padding-left: 20px;
+  padding-left: 23px;
   box-sizing: border-box;
 }
 
@@ -129,8 +133,8 @@ h2 {
   content: "";
   display: inline-block;
   vertical-align: bottom;
-  width: 1rem;
-  height: 1rem;
+  width: 30px;
+  height: 30px;
   border-radius: 30%;
   border-style: solid;
   border-width: 0.1rem;
@@ -147,14 +151,14 @@ h2 {
 }
 
 .btn-login {
-  margin-top: 20px;
-  font-size: 20px;
+  margin-top: 40px;
+  font-size: 28px;
   width: 100%;
   border-radius: 15px;
   background-color: #0070D2;
   color: #F6F6F6;
   border: 1px solid #FFFCFC;
-  height: 50px;
+  height: 72px;
   cursor: pointer;
 }
 </style>
