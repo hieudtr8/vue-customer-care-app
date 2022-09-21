@@ -17,7 +17,7 @@
               <input type="checkbox" name="remember-me" id="remember-me">
               <label for="remember-me">Ghi Nhớ ?</label>
             </div>
-            <button @click="handleSubmit" class="btn btn-login">Đăng nhập</button>
+            <button class="btn btn-login">Đăng nhập</button>
           </form>
         </div>
       </div>
@@ -28,21 +28,33 @@
 
 <script>
 import { ref } from 'vue';
+import { useStore } from "vuex";
+import { useRouter } from "vue-router";
+// import { md5 } from 'md5'
 export default {
   setup () {
+    const store = useStore();
+    const router = useRouter();
     let email = ref('');
     let password = ref('');
-    const handleSubmit = () => { console.log(email.value, password.value) };
+    const handleSubmit = async () => {
+      try {
+        await store.dispatch('login', { email: email.value, password: password.value })
+        router.push('/customer-info');
+      } catch (error) {
+        console.log(`🌊 | file: LoginView.vue | line 42 | error`, error);
+      }
+    };
     return {
       email,
       password,
       handleSubmit
     }
   },
-  mounted() {
-    fetch('https://api.npoint.io/60e614502197e5480a32')
+  mounted () {
+    fetch('https://api.npoint.io/fdc481fbd7f82fc24f4d')
       .then((res) => res.json())
-      .then(data =>  console.log(data))
+      .then(data => console.log(data))
   }
 }
 </script>
@@ -58,12 +70,12 @@ h2 {
 .container {
   margin-top: 5%;
   position: relative;
-  height: 800px; 
+  height: 80vh;
 }
 
 .login-wrapper {
   background-image: url('../../public/login-image.png');
-  background-position: center;
+  background-position: center center;
   background-repeat: no-repeat;
   background-size: 100% 100%;
   position: absolute;
@@ -76,8 +88,13 @@ h2 {
 
 .login-modal {
   position: absolute;
+  left: -2%;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
   background-color: #FFFCFC;
-  height: 100%;
+  height: inherit;
   width: 48%;
   box-shadow: 0px 6px 15px rgb(0 0 0 / 50%);
   border-radius: 30px;
@@ -85,7 +102,7 @@ h2 {
 
 .detail-modal {
   margin: 0px auto;
-  margin-top: 80px;
+  margin-top: 5vh;
   max-width: 70%;
   text-align: left;
 }
@@ -113,11 +130,11 @@ h2 {
   color: #CECDCD;
 }
 
-.input-container input[type=email],
-.input-container input[type=password] {
+.input-container input {
   width: 100%;
   font-size: 28px;
   border: 1px solid #CECDCD;
+  color: #949494;
   height: 72px;
   border-radius: 15px;
   margin-top: 18px;
@@ -160,5 +177,114 @@ h2 {
   border: 1px solid #FFFCFC;
   height: 72px;
   cursor: pointer;
+}
+
+/* ______ Responsive _____ */
+@media screen and (min-width: 1920px) {
+  .detail-modal {
+    margin-top: 80px;
+  }
+}
+
+@media screen and (max-width: 821px) {
+  .login-wrapper {
+    background-image: none;
+  }
+
+  .login-modal {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 430px) {
+  h2 {
+    font-size: 20px;
+  }
+
+  .login-modal {
+    height: auto;
+  }
+
+  .input-container {
+    margin-top: 5px !important;
+  }
+
+  .input-container input {
+    margin-top: 5px !important;
+    font-size: 14px !important;
+    height: 40px !important;
+  }
+
+  .input-container input::placeholder {
+    font-size: 14px !important;
+  }
+
+  .input-container label {
+    font-size: 20px !important;
+  }
+
+  .input-container-checkbox label {
+    font-size: 14px !important;
+  }
+
+  .input-container-checkbox input[type="checkbox"]+*::before {
+    width: 20px !important;
+    height: 20px !important;
+  }
+
+  .btn-login {
+    height: 40px !important;
+    font-size: 18px !important;
+    margin-bottom: 20px;
+  }
+}
+
+@media screen and (max-height: 800px) {
+  h2 {
+    margin-bottom: 20px;
+  }
+
+  .input-container {
+    margin-top: 5px !important;
+  }
+
+  .input-container input {
+    margin-top: 5px !important;
+    font-size: 14px !important;
+    height: 40px !important;
+  }
+
+  .input-container input::placeholder {
+    font-size: 14px !important;
+  }
+
+  .input-container label {
+    font-size: 20px !important;
+  }
+
+  .input-container-checkbox label {
+    font-size: 14px !important;
+  }
+
+  .input-container-checkbox input[type="checkbox"]+*::before {
+    width: 20px !important;
+    height: 20px !important;
+  }
+
+  .btn-login {
+    height: 40px !important;
+    font-size: 18px !important;
+  }
+}
+
+@media screen and (max-height: 360px) {
+  h2 {
+    font-size: 25px;
+    margin-bottom: 5px;
+  }
+
+  .btn-login {
+    margin-top: 5px;
+  }
 }
 </style>
