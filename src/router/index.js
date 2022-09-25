@@ -23,5 +23,10 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
 });
-
+// eslint-disable-next-line no-unused-vars
+router.beforeEach(async (to, from) => {
+  if (!localStorage.getItem('authToken') && to.name !== 'login') {
+    return { name: 'login' };
+  }
+});
 export default router;

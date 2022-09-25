@@ -1,11 +1,15 @@
-<template lang="">
+<template>
+  <SideBar />
   <div>
-    <h1>Customer info page</h1>
+
   </div>
 </template>
 <script>
+import SideBar from "@/components/SideBar.vue";
 export default {
-  
+  components: { SideBar },
+  setup () {
+  }
 }
 </script>
 <style lang="">

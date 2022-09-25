@@ -17,6 +17,9 @@
               <input type="checkbox" name="remember-me" id="remember-me">
               <label for="remember-me">Ghi Nhớ ?</label>
             </div>
+            <div class="error-display">
+              {{ errorLogin }}
+            </div>
             <button class="btn btn-login">Đăng nhập</button>
           </form>
         </div>
@@ -27,35 +30,40 @@
 </template>
 
 <script>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
-// import { md5 } from 'md5'
+
 export default {
   setup () {
     const store = useStore();
+    console.log(store.state.user)
     const router = useRouter();
     let email = ref('');
     let password = ref('');
-    const handleSubmit = async () => {
+    let errorLogin = ref("");
+
+    onMounted(() => {
       try {
-        await store.dispatch('login', { email: email.value, password: password.value })
-        router.push('/customer-info');
+        store.dispatch('getListUser');
       } catch (error) {
-        console.log(`🌊 | file: LoginView.vue | line 42 | error`, error);
+        console.log(`error`, error);
       }
+    })
+
+    const handleSubmit = () => {
+      store.dispatch('login', { email: email.value, password: password.value })
+      errorLogin.value = store.state.error
+      router.push('/customer-info')
     };
+
     return {
       email,
       password,
+      errorLogin,
       handleSubmit
     }
   },
-  mounted () {
-    fetch('https://api.npoint.io/fdc481fbd7f82fc24f4d')
-      .then((res) => res.json())
-      .then(data => console.log(data))
-  }
 }
 </script>
 
@@ -177,6 +185,13 @@ h2 {
   border: 1px solid #FFFCFC;
   height: 72px;
   cursor: pointer;
+}
+
+.error-display {
+  color: red;
+  font-size: 14px;
+  font-weight: 400;
+  margin-top: 5px;
 }
 
 /* ______ Responsive _____ */
