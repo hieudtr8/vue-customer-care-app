@@ -37,7 +37,6 @@ import { useRouter } from "vue-router";
 export default {
   setup () {
     const store = useStore();
-    console.log(store.state.user)
     const router = useRouter();
     let email = ref('');
     let password = ref('');

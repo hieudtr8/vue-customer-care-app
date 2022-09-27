@@ -6,12 +6,13 @@ export default createStore({
     authorizationToken: null,
     listUser: [],
     error: '',
+    currentTab: 'customerInfo',
+    currentIcon: 'info',
   },
   getters: {},
   mutations: {
     setUser(state, payload) {
       state.user = payload;
-      console.log(`🌊 | file: index.js | line 14 | state.user`, state.user);
     },
     setAuthorizationToken(state, payload) {
       state.authorizationToken = payload;
@@ -21,6 +22,12 @@ export default createStore({
     },
     setError(state, payload) {
       state.error = payload;
+    },
+    setCurrentTab(state, payload) {
+      state.currentTab = payload;
+    },
+    setCurrentIcon(state, payload) {
+      state.currentIcon = payload;
     },
   },
   actions: {
@@ -40,6 +47,7 @@ export default createStore({
           authToken = md5(user.email + user.password);
           context.commit('setUser', loginUser);
           context.commit('setAuthorizationToken', authToken);
+          localStorage.setItem('currentUser', JSON.stringify(user));
           localStorage.setItem('authToken', authToken);
         }
       }
@@ -50,7 +58,8 @@ export default createStore({
     logout(context) {
       context.commit('setUser', null);
       context.commit('setAuthorizationToken', '');
-      localStorage.setItem('authToken', "");
+      localStorage.setItem('currentUser', null);
+      localStorage.setItem('authToken', '');
     },
   },
   modules: {},
