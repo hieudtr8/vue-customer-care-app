@@ -28,6 +28,7 @@ export default {
 <style scoped>
 .tab-container {
   border-bottom: 2px solid #DF6106;
+  width: 100%;
 }
 
 .tab {
@@ -40,6 +41,7 @@ export default {
   border-right: 1.5px solid #CFCFCF;
   font-weight: bold;
   line-height: 30px;
+  width: 50%;
 }
 
 .active {

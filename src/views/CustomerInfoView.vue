@@ -5,6 +5,9 @@
     <div id="customer-info-container" class="d-flex">
       <div id="customer-info-tab">
         <CustomerTab />
+        <ListIcon />
+        <br />
+        <br />
         <div v-if="currentTab === 'customerInfo'">
           <CustomerInfo />
         </div>
@@ -12,8 +15,16 @@
           <CustomerSearch />
         </div>
       </div>
-      <div id="customer-table">
-        <CustomerTable />
+      <div id="customer-table" v-if="currentIcon === 'info'">
+        <Suspense>
+          <CustomerTable />
+          <template #fallback>
+            <div class="d-flex justify-content-center d-flex align-items-center">
+              Loading
+              <LoadingRing />
+            </div>
+          </template>
+        </Suspense>
       </div>
     </div>
   </div>
@@ -27,12 +38,16 @@ import CustomerTab from "@/components/customerInfoPage/CustomerTab.vue";
 import CustomerSearch from "../components/customerInfoPage/CustomerSearch.vue";
 import CustomerInfo from "@/components/customerInfoPage/customerInfo/CustomerInfo.vue";
 import CustomerTable from "../components/customerInfoPage/customerTable/CustomerTable.vue";
+import ListIcon from "../components/customerInfoPage/ListIcon.vue";
+import LoadingRing from "@/components/LoadingRing.vue";
+
 export default {
-  components: { SideBar, NavBar, CustomerTab, CustomerSearch, CustomerInfo, CustomerTable },
+  components: { SideBar, NavBar, CustomerTab, CustomerSearch, CustomerInfo, CustomerTable, ListIcon, LoadingRing },
   setup () {
     const store = useStore();
     const currentTab = computed(() => store.state.currentTab);
-    return { currentTab };
+    const currentIcon = computed(() => store.state.currentIcon);
+    return { currentTab, currentIcon };
   }
 }
 </script>
@@ -50,6 +65,7 @@ export default {
   height: 97%;
   width: 33%;
 }
+
 #customer-table {
   width: 67%;
 }

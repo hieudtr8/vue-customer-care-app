@@ -14,7 +14,7 @@
       </div>
       <div id="main-table">
         <div v-if="currentTab === 'listUser'">
-          List User
+          <TableUser :listUser="listUser" />
         </div>
         <div v-else-if="currentTab === 'listNotes'">
           List Notes
@@ -25,16 +25,27 @@
 </template>
 <script>
 import { ref } from "vue";
+import { useStore } from "vuex";
+import TableUser from "./TableUser.vue";
 
 
 export default {
-  setup () {
+  async setup () {
     const currentTab = ref("listUser");
     const changeTableTab = (tab) => {
       currentTab.value = tab;
+    };
+    const store = useStore();
+    let loading = true;
+    let listUser = ref([]);
+    await store.dispatch('getListUser');
+    if (store.state.listUser) {
+      listUser = store.state.listUser;
+      loading = false;
     }
-    return { currentTab, changeTableTab };
-  }
+    return { currentTab, changeTableTab, listUser, loading };
+  },
+  components: { TableUser }
 }
 </script>
 <style scoped>

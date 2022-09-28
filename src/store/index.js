@@ -31,8 +31,8 @@ export default createStore({
     },
   },
   actions: {
-    getListUser(context) {
-      fetch('https://api.npoint.io/fdc481fbd7f82fc24f4d')
+    async getListUser(context) {
+      await fetch('https://api.npoint.io/fdc481fbd7f82fc24f4d')
         .then((response) => response.json())
         .then((data) => context.commit('setListUser', data));
     },
