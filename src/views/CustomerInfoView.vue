@@ -12,8 +12,8 @@
           <CustomerSearch />
         </div>
       </div>
-      <div class="customer-table">
-
+      <div id="customer-table">
+        <CustomerTable />
       </div>
     </div>
   </div>
@@ -26,8 +26,9 @@ import { computed } from "vue";
 import CustomerTab from "@/components/customerInfoPage/CustomerTab.vue";
 import CustomerSearch from "../components/customerInfoPage/CustomerSearch.vue";
 import CustomerInfo from "@/components/customerInfoPage/customerInfo/CustomerInfo.vue";
+import CustomerTable from "../components/customerInfoPage/customerTable/CustomerTable.vue";
 export default {
-  components: { SideBar, NavBar, CustomerTab, CustomerSearch, CustomerInfo },
+  components: { SideBar, NavBar, CustomerTab, CustomerSearch, CustomerInfo, CustomerTable },
   setup () {
     const store = useStore();
     const currentTab = computed(() => store.state.currentTab);
@@ -43,8 +44,13 @@ export default {
   border: 1px solid #CFCFCF;
   border-radius: 5px;
 }
+
 #customer-info-tab {
   border-right: 1px solid rgba(0, 0, 0, 0.25);
   height: 97%;
+  width: 33%;
+}
+#customer-table {
+  width: 67%;
 }
 </style>
