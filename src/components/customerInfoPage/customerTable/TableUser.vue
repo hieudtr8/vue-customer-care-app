@@ -12,18 +12,43 @@
       <tbody>
         <tr v-for="(user, index) in listUser" :key="index">
           <td scope="col">{{user.fullname}}</td>
-          <td class="col-email" scope="col">{{user.email}}</td>
+          <td @click="toggleModalUser()" class="col-email" scope="col">{{user.email}}</td>
           <td scope="col">{{user.phone_number}}</td>
           <td scope="col">{{user.address}}</td>
         </tr>
       </tbody>
     </table>
   </div>
+  <div id="modal-wrapper" @click="toggleModalUser">
+    <PopupModal :showModal="showModal">
+      <template #modal-header>
+        <div>
+          Customer Information
+        </div>
+      </template>
+      <template #modal-body>
+        <div>
+          <CustomerInfo />
+        </div>
+      </template>
+    </PopupModal>
+  </div>
 </template>
 <script>
+import PopupModal from "@/components/PopupModal.vue";
+import { ref } from "vue";
+import CustomerInfo from "../customerInfo/CustomerInfo.vue";
 
 export default {
-  props: ['listUser'],
+  props: ["listUser"],
+  components: { PopupModal, CustomerInfo },
+  setup () {
+    const showModal = ref(false);
+    const toggleModalUser = () => {
+      showModal.value = !showModal.value;
+    }
+    return { showModal, toggleModalUser };
+  },
 }
 </script>
 <style scoped>
