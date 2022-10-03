@@ -16,22 +16,26 @@ export default {
     MDBModalFooter,
     MDBBtn,
   },
-  props: ['showModal'],
+  props: ['showModal', 'haveSave'],
 };
 </script>
   
 <template>
   <MDBModal :animation="true" tabindex="-1" :modelValue="showModal" :keyboard="false" :focus="false">
-    <MDBModalHeader>
-      <MDBModalTitle>
-        <slot name="modal-header"></slot>
+    <MDBModalHeader @click.stop="" :close="false">
+      <MDBModalTitle class="w-100">
+        <div class="w-100 d-flex justify-content-between">
+          <slot name="modal-header"></slot>
+          <span @click="$emit('closeModal')">&times;</span>
+        </div>
       </MDBModalTitle>
     </MDBModalHeader>
     <MDBModalBody @click.stop="">
       <slot name="modal-body"></slot>
     </MDBModalBody>
-    <MDBModalFooter>
-      <MDBBtn color="primary"> Close </MDBBtn>
+    <MDBModalFooter @click.stop="">
+      <MDBBtn v-if="haveSave" color="primary" @click="$emit('saveModal')"> Lưu </MDBBtn>
+      <MDBBtn :color="!haveSave ? 'primary' : 'secondary'" @click="$emit('closeModal')"> Đóng </MDBBtn>
     </MDBModalFooter>
   </MDBModal>
 </template>

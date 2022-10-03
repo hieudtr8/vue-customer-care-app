@@ -19,20 +19,22 @@
       </tbody>
     </table>
   </div>
-  <div id="modal-wrapper" @click="toggleModalUser">
-    <PopupModal :showModal="showModal">
-      <template #modal-header>
-        <div>
-          Customer Information
-        </div>
-      </template>
-      <template #modal-body>
-        <div>
-          <CustomerInfo />
-        </div>
-      </template>
-    </PopupModal>
-  </div>
+  <teleport to='body'>
+    <div id="modal-wrapper" @click="toggleModalUser">
+      <PopupModal :showModal="showModal" @closeModal="toggleModalUser">
+        <template #modal-header>
+          <div>
+            Thông tin người dùng
+          </div>
+        </template>
+        <template #modal-body>
+          <div>
+            <CustomerInfo />
+          </div>
+        </template>
+      </PopupModal>
+    </div>
+  </teleport>
 </template>
 <script>
 import PopupModal from "@/components/PopupModal.vue";

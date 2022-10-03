@@ -5,17 +5,15 @@
     <div id="customer-info-container" class="d-flex">
       <div id="customer-info-tab">
         <CustomerTab />
-        <ListIcon />
-        <br />
-        <br />
         <div v-if="currentTab === 'customerInfo'">
+          <ListIcon />
           <CustomerInfo />
         </div>
         <div v-else-if="currentTab === 'search'">
           <CustomerSearch />
         </div>
       </div>
-      <div id="customer-table" v-if="currentIcon === 'info'">
+      <div id="customer-table" v-if="currentTab === 'customerInfo' && currentIcon === 'info'">
         <Suspense>
           <CustomerTable />
           <template #fallback>
@@ -36,13 +34,13 @@ import { useStore } from "vuex";
 import { computed } from "vue";
 import CustomerTab from "@/components/customerInfoPage/CustomerTab.vue";
 import CustomerSearch from "../components/customerInfoPage/CustomerSearch.vue";
-import CustomerInfo from "@/components/customerInfoPage/customerInfo/CustomerInfo.vue";
 import CustomerTable from "../components/customerInfoPage/customerTable/CustomerTable.vue";
-import ListIcon from "../components/customerInfoPage/ListIcon.vue";
 import LoadingRing from "@/components/LoadingRing.vue";
+import ListIcon from "@/components/customerInfoPage/customerInfo/ListIcon.vue";
+import CustomerInfo from "@/components/customerInfoPage/customerInfo/CustomerInfo.vue";
 
 export default {
-  components: { SideBar, NavBar, CustomerTab, CustomerSearch, CustomerInfo, CustomerTable, ListIcon, LoadingRing },
+  components: { SideBar, NavBar, CustomerTab, CustomerSearch, CustomerTable, ListIcon, LoadingRing, CustomerInfo },
   setup () {
     const store = useStore();
     const currentTab = computed(() => store.state.currentTab);
