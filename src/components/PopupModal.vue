@@ -16,7 +16,7 @@ export default {
     MDBModalFooter,
     MDBBtn,
   },
-  props: ['showModal', 'haveSave'],
+  props: ['showModal', 'haveSave', 'haveCustomFooter'],
 };
 </script>
   
@@ -33,9 +33,9 @@ export default {
     <MDBModalBody @click.stop="">
       <slot name="modal-body"></slot>
     </MDBModalBody>
-    <MDBModalFooter @click.stop="">
-      <MDBBtn v-if="haveSave" color="primary" @click="$emit('saveModal')"> Lưu </MDBBtn>
-      <MDBBtn :color="!haveSave ? 'primary' : 'secondary'" @click="$emit('closeModal')"> Đóng </MDBBtn>
+    <MDBModalFooter @click.stop="" v-if="!haveCustomFooter">
+        <MDBBtn v-if="haveSave" color="primary" @click="$emit('saveModal')"> Lưu </MDBBtn>
+        <MDBBtn :color="!haveSave ? 'primary' : 'secondary'" @click="$emit('closeModal')"> Đóng </MDBBtn>
     </MDBModalFooter>
   </MDBModal>
 </template>

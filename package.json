@@ -12,14 +12,15 @@
     "@popperjs/core": "^2.11.6",
     "@vueform/multiselect": "^2.5.6",
     "bootstrap": "^5.2.2",
-    "bootstrap-vue-3": "^0.3.11",
     "core-js": "^3.8.3",
     "md5": "^2.3.0",
     "mdb-vue-ui-kit": "^3.0.0",
+    "vee-validate": "^4.6.10",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3",
     "vue-svg-loader": "^0.16.0",
-    "vuex": "^4.0.0"
+    "vuex": "^4.0.0",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",

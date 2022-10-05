@@ -40,7 +40,7 @@
   </div>
   <teleport to='body'>
     <div id="modal-wrapper" @click="toggleModalSelectedSearchUser" class="d-md-none d-sm-block">
-      <PopupModal :showModal="showSearchUserModal" :haveSave="true" @closeModal="toggleModalSelectedSearchUser">
+      <PopupModal :showModal="showSearchUserModal" @closeModal="toggleModalSelectedSearchUser">
         <template #modal-header>
           <div>
             Thông tin cá nhân
