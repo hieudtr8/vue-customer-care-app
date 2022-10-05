@@ -1,7 +1,7 @@
 <template>
-  <div class="mx-4">
+  <div class="mx-sm-5 mx-md-4">
     <div id="create-user-container" class="mb-3">
-      <button id="create-user" @click="toggleModalCreateNewUser">Tạo người dùng mới</button>
+      <button id="create-user" @click="toggleModalCreateNewUser">Tạo người dùng</button>
     </div>
     <div id="table-list">
       <div id="table-tabs-container" class="d-flex">
@@ -55,12 +55,10 @@ export default {
       currentTab.value = tab;
     };
     const store = useStore();
-    let loading = true;
     let listUser = ref([]);
     await store.dispatch('getListUser');
     if (store.state.listUser) {
       listUser = store.state.listUser;
-      loading = false;
     }
     // const createNewUser = () => {
     //   const postData = {
@@ -100,7 +98,7 @@ export default {
     const handleSaveUser = () => {
       console.log('save user')
     }
-    return { currentTab, changeTableTab, listUser, loading, showModalCreateUser, toggleModalCreateNewUser, handleSaveUser };
+    return { currentTab, changeTableTab, listUser, showModalCreateUser, toggleModalCreateNewUser, handleSaveUser };
   },
   components: { TableUser, PopupModal, UserRegisterForm }
 }

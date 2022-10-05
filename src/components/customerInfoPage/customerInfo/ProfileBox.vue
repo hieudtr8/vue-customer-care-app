@@ -5,7 +5,7 @@
         <SharedSvg name="thin-message-parcel" />
       </div>
       <span class="box-text ms-4 my-auto">
-        Mail <span v-if="email">: {{ email }}</span>
+        Mail <span class="d-block" v-if="email"> {{ email }}</span>
       </span>
     </div>
     <div class="d-flex mb-4 profile-box" @click="showUserInfo('id_card')">
@@ -13,7 +13,7 @@
         <SharedSvg name="id-card" />
       </div>
       <span class="box-text ms-4 my-auto">
-        Số CMND <span v-if="id_card">: {{ id_card }}</span>
+        Số CMND <span class="d-block" v-if="id_card">{{ id_card }}</span>
       </span>
     </div>
     <div class="d-flex mb-4 profile-box" @click="showUserInfo('phone_number')">
@@ -21,7 +21,7 @@
         <SharedSvg name="phone-icon" />
       </div>
       <span class="box-text ms-4 my-auto">
-        Số điện thoại <span v-if="phone_number">: {{ phone_number }}</span>
+        Số điện thoại <span class="d-block" v-if="phone_number">{{ phone_number }}</span>
       </span>
     </div>
     <div class="d-flex mb-4 profile-box" @click="showUserInfo('address')">
@@ -29,35 +29,43 @@
         <SharedSvg name="address-book" />
       </div>
       <span class="box-text ms-4 my-auto">
-        Địa chỉ <span v-if="address">: {{ address }}</span>
+        Địa chỉ <span class="d-block" v-if="address">{{ address }}</span>
       </span>
     </div>
   </div>
 </template>
 <script>
 import SharedSvg from "@/components/SharedSvg.vue";
-import { ref } from 'vue';
+import { ref, watchEffect } from 'vue';
 export default {
   components: { SharedSvg },
-  setup () {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    let email = ref("");
-    let id_card = ref("");
-    let phone_number = ref("");
-    let address = ref("");
+  props: ['selectedUser'],
+  setup (props) {
+    const email = ref("");
+    const id_card = ref("");
+    const phone_number = ref("");
+    const address = ref("");
+    const selectedUser = ref("");
+    watchEffect(() => {
+      selectedUser.value = props.selectedUser;
+      email.value = "";
+      id_card.value = "";
+      phone_number.value = "";
+      address.value = "";
+    })
     const showUserInfo = (selectedInfo) => {
       switch (selectedInfo) {
         case 'email':
-          email.value = !email.value ? email.value = currentUser[selectedInfo] : "";
+          email.value = !email.value ? email.value = selectedUser.value[selectedInfo] : "";
           break;
         case 'id_card':
-          id_card.value = !id_card.value ? id_card.value = currentUser[selectedInfo] : "";
+          id_card.value = !id_card.value ? id_card.value = selectedUser.value[selectedInfo] : "";
           break;
         case 'phone_number':
-          phone_number.value = !phone_number.value ? phone_number.value = currentUser[selectedInfo] : "";
+          phone_number.value = !phone_number.value ? phone_number.value = selectedUser.value[selectedInfo] : "";
           break;
         case 'address':
-          address.value = !address.value ? address.value = currentUser[selectedInfo] : "";
+          address.value = !address.value ? address.value = selectedUser.value[selectedInfo] : "";
           break;
       }
     }

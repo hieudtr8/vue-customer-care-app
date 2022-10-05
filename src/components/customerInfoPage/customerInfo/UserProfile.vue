@@ -2,12 +2,12 @@
   <div id="customer-info-display" class="d-block mt-5">
     <div id="information" class="d-block mx-4">
       <div class="d-flex">
-        <div id="profile-picture-container">
+        <div id="profile-picture-container" v-if="profile_picture">
           <img :src="profile_picture" alt="" class="avatar">
         </div>
         <div class="ms-3 mt-3">
-          <h4 class="user-fullname mb-3"> {{fullname}} </h4>
-          <div id="tag-container" class="d-flex ">
+          <h4 class="user-fullname mb-3" v-if="fullname"> {{fullname}} </h4>
+          <div id="tag-container" class="d-flex" v-if="tags">
             <div v-for="(tag, index) in tags" :key="index" class="tag border border-round"
               :class="{vip: tag =='Vip',active: tag === 'Active' }">
               {{tag.toUpperCase()}}
@@ -19,16 +19,33 @@
   </div>
 </template>
 <script>
+import { ref, watchEffect } from "vue";
+
 export default {
-  setup () {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    const { profile_picture, fullname, tags } = currentUser;
+  props: ['selectedUser'],
+  setup (props) {
+    let selectedUser = ref(null);
+    let profile_picture = ref("");
+    let fullname = ref("");
+    let tags = ref("");
+    watchEffect(() => {
+      selectedUser.value = props.selectedUser;
+      profile_picture.value = selectedUser.value.profile_picture;
+      fullname.value = selectedUser.value.fullname;
+      tags.value = selectedUser.value.tags;
+    })
 
     return { profile_picture, fullname, tags }
   }
 }
 </script>
 <style scoped>
+@media screen and (max-width:1000px) {
+  #tag-container {
+    display: none !important;
+  }
+}
+
 img.avatar {
   height: 100px;
   width: 100px;

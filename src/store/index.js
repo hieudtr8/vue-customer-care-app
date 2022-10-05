@@ -8,6 +8,7 @@ export default createStore({
     error: '',
     currentTab: 'customerInfo',
     currentIcon: 'info',
+    selectedSearchUser: null,
   },
   getters: {},
   mutations: {
@@ -25,9 +26,15 @@ export default createStore({
     },
     setCurrentTab(state, payload) {
       state.currentTab = payload;
+      if (payload === 'customerInfo') {
+        state.selectedSearchUser = null;
+      }
     },
     setCurrentIcon(state, payload) {
       state.currentIcon = payload;
+    },
+    setSelectedSearchUser(state, payload) {
+      state.selectedSearchUser = payload;
     },
   },
   actions: {
