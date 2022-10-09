@@ -8,7 +8,7 @@
         <div class="ms-3 mt-3">
           <h4 class="user-fullname mb-3" v-if="fullname"> {{fullname}} </h4>
           <div id="tag-container" class="d-flex" v-if="tags">
-            <div v-for="(tag, index) in tags" :key="index" class="tag border border-round"
+            <div v-for="(tag, index) in tags" :key="index" class="tag bg-primary border border-round"
               :class="{vip: tag =='Vip',active: tag === 'Active' }">
               {{tag.toUpperCase()}}
             </div>
@@ -69,10 +69,10 @@ img.avatar {
 }
 
 .vip {
-  background-color: #DD7A01;
+  background-color: #DD7A01 !important;
 }
 
 .active {
-  background-color: #0B8E11;
+  background-color: #0B8E11 !important;
 }
 </style>

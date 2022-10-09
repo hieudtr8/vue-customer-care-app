@@ -14,7 +14,7 @@
       </div>
       <div id="main-table">
         <div v-if="currentTab === 'listUser'">
-          <TableUser :listUser="listUser" />
+          <TableUser :listUser="listUser" :key="listUser" />
         </div>
         <div v-else-if="currentTab === 'listNotes'">
         </div>
@@ -31,20 +31,31 @@
         </template>
         <template #modal-body>
           <Form class="form-register" @submit="onSubmitCreateNewUser">
-            <div class="input-profile-picture" @click="file.click()">
-              <Field name="file" v-slot="{ handleInputFile }" :rules="isRequired">
-                <input type="file" class="d-none" ref="file" :change="handleInputFile" />
-              </Field>
-              <img class="insert-image" src="../../../assets/images/insert-image.png" alt="">
-              <div class="camera-icon-container">
-                <img class="camera-icon" src="../../../assets/images/camera-icon.png" alt="">
+            <div class="input-profile-picture" :class=" {'show-bg-insert-image': isShowInputProfileImage } "
+              @click="file.click()">
+              <input type="file" class="d-none" ref="file" @change="handleInputFile"
+                accept="image/png, image/gif, image/jpeg" />
+              <div class="insert-image-container">
+                <img v-if="isShowInputProfileImage" class="insert-image" src="../../../assets/images/insert-image.png"
+                  alt="">
+                <div class="camera-icon-container">
+                  <img class="camera-icon" src="../../../assets/images/camera-icon.png" alt="">
+                </div>
+              </div>
+              <div v-if="!isShowInputProfileImage">
+                <img class="display-insert-image" :src="profile_picture" alt="">
+                <div class="camera-icon-container">
+                  <img class="camera-icon" src="../../../assets/images/camera-icon.png" alt="">
+                </div>
               </div>
             </div>
+            <span v-if="isShowImageError" role="alert" class="text-danger d-flex justify-content-center">Không được để
+              trống</span>
             <ErrorMessage class="text-danger" name="file" />
             <div class="mt-4 d-flex flex-wrap justify-content-between">
               <div class="input-text-container">
-                <label class="d-block mb-2 text-secondary" for="username">Tên người dùng</label>
-                <Field type="text" name="username" id="username" :rules="usernameRules" />
+                <label class="d-block mb-2 text-secondary" for="username">Tên đăng nhập</label>
+                <Field type="text" name="username" id="username" :rules="isRequired" />
                 <ErrorMessage class="text-danger" name="username" />
               </div>
               <div class="input-text-container">
@@ -59,9 +70,9 @@
                 <ErrorMessage class="text-danger" name="email" />
               </div>
               <div class="input-text-container">
-                <label class="d-block mb-2 text-secondary" for="pasword">Mật khẩu</label>
-                <Field type="password" name="pasword" id="pasword" :rules="isRequired" />
-                <ErrorMessage class="text-danger" name="pasword" />
+                <label class="d-block mb-2 text-secondary" for="password">Mật khẩu</label>
+                <Field type="password" name="password" id="password" :rules="isRequired" />
+                <ErrorMessage class="text-danger" name="password" />
               </div>
               <div class="input-text-container">
                 <label class="d-block mb-2 text-secondary" for="phone_number">Số điện thoại</label>
@@ -81,9 +92,13 @@
               <div class="input-text-container">
                 <label class="d-block mb-2 text-secondary" for="tags">Thẻ</label>
                 <MultiSelectInput :options="listTags" @changeOptionSelect="changeOptionSelect" />
+                <span v-if="isShowTagsError" role="alert" class="text-danger">Không được để trống</span>
               </div>
-              <MDBModalFooter>
-                <button type="submit" class="btn btn-primary">Lưu</button>
+              <MDBModalFooter class="w-100 border-0">
+                <button type="submit" :disabled="loadingCreateUser" class="btn btn-primary"> <span
+                    v-if="!loadingCreateUser"> Lưu </span> <span v-else>
+                    <LoadingDot />
+                  </span> </button>
                 <div class="btn btn-secondary" @click="toggleModalCreateNewUser">Đóng</div>
               </MDBModalFooter>
             </div>
@@ -101,10 +116,13 @@ import PopupModal from "@/components/PopupModal.vue";
 import MultiSelectInput from "@/components/MultiSelectInput.vue";
 import { Form, Field, ErrorMessage } from 'vee-validate';
 import { MDBModalFooter } from 'mdb-vue-ui-kit';
-import { configure } from 'vee-validate';
+import { notify } from "@kyvg/vue3-notification";
+import LoadingDot from "../../LoadingDot.vue";
+// import LoadingRing from "@/components/LoadingRing.vue";
 
 export default {
-  components: { TableUser, PopupModal, MultiSelectInput, Form, Field, ErrorMessage, MDBModalFooter },
+  // components: { TableUser, PopupModal, MultiSelectInput, Form, Field, ErrorMessage, MDBModalFooter, LoadingRing },
+  components: { TableUser, PopupModal, MultiSelectInput, Form, Field, ErrorMessage, MDBModalFooter, LoadingDot },
   async setup () {
     const currentTab = ref("listUser");
     const showModalCreateUser = ref(false);
@@ -112,74 +130,111 @@ export default {
       currentTab.value = tab;
     };
     const store = useStore();
-    let listUser = ref([]);
+    const listUser = ref([]);
     await store.dispatch('getListUser');
-    if (store.state.listUser) {
-      listUser = store.state.listUser;
-    }
 
     const profile_picture = ref("");
-    const handleInputFile = (e) => {
-      profile_picture.value = e.value;
-    }
+    const isShowInputProfileImage = ref(false);
+    const isShowImageError = ref(false);
+    const isShowTagsError = ref(false);
     const file = ref("");
-    const tagValue = ref("");
+    const tagValue = ref([]);
     const listTags = ['Vip', 'Admin'];
+    const loadingCreateUser = ref(false);
+
+    if (store.state.listUser) {
+      listUser.value = store.state.listUser;
+    }
+
+    const handleInputFile = (e) => {
+      const reader = new FileReader();
+      if (e.target.files.length) {
+        reader.readAsDataURL(e.target.files[0]);
+        reader.onload = () => {
+          profile_picture.value = reader.result;
+          isShowInputProfileImage.value = false;
+          isShowImageError.value = false;
+        }
+      }
+    }
+
     const changeOptionSelect = (value) => {
       tagValue.value = value;
+      if (tagValue.value.length > 0) {
+        isShowTagsError.value = false;
+      }
     }
-    // const createNewUser = () => {
-    //   const postData = {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify({
-    //       "tags": [
-    //         "Active",
-    //         "Vip"
-    //       ],
-    //       "email": "test@gmail.com",
-    //       "address": "Số nhà 170, xx, xx, xx",
-    //       "id_card": "02221321342323",
-    //       "fullname": "Test hehe",
-    //       "password": "c4ca4238a0b923820dcc509a6f75849b",
-    //       "username": "test123",
-    //       "phone_number": "0366954281",
-    //       "profile_picture": "https://www.shareicon.net/data/512x512/2016/08/18/810266_man_512x512.png"
-    //     },),
-    //   };
-    //   fetch(
-    //     'https://api.npoint.io/4e8e26ab328c9a1d15ea',
-    //     postData
-    //   )
-    //     .then((response) => response.json())
-    //     .then((data) => {
-    //       console.log(`🌊 | file: CustomerTable.vue | line 73 | data`, data);
-    //     });
 
-    // }
     const toggleModalCreateNewUser = () => {
       showModalCreateUser.value = !showModalCreateUser.value;
+      isShowInputProfileImage.value = showModalCreateUser.value;
+      profile_picture.value = null;
     }
-
-    configure({
-      generateMessage: required => {
-        return `Trường ${required.field} là bắt buộc`;
-      },
-    });
 
     const isRequired = (value) => {
       if (value && value.trim()) {
         return true;
       }
-      return 'Trường này bắt buộc';
+      return 'Không được để trống';
     }
 
-    const onSubmitCreateNewUser = (value) => {
-      console.log(`🌊 | file: CustomerTable.vue | line 171 | value`, value);
+    const isValidImageAndTags = () => {
+      let valid = true;
+      if (isShowInputProfileImage.value && !profile_picture.value) {
+        isShowImageError.value = true;
+        valid = false
+      }
+      if (tagValue.value.length == 0) {
+        isShowTagsError.value = true;
+        valid = false
+      }
+      return valid;
     }
-    return { currentTab, changeTableTab, listUser, showModalCreateUser, toggleModalCreateNewUser, isRequired, listTags, changeOptionSelect, file, tagValue, handleInputFile, onSubmitCreateNewUser };
+
+    const md5 = require('md5');
+    const onSubmitCreateNewUser = (value) => {
+      if (isValidImageAndTags()) {
+        value.tags = tagValue.value;
+        value.profile_picture = profile_picture.value;
+        value.password = md5(value.password);
+
+        const postListUserWithNew = [...listUser.value, value];
+
+        postCreateNewUser(postListUserWithNew);
+      }
+    }
+
+    const postCreateNewUser = (data) => {
+      loadingCreateUser.value = true;
+      const header = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      };
+      fetch(
+        'https://api.npoint.io/4e8e26ab328c9a1d15ea',
+        header
+      )
+        .then((response) => response.json())
+        .then(async () => {
+          await store.dispatch("getListUser");
+          if (store.state.listUser) {
+            listUser.value = store.state.listUser;
+          }
+          notify({
+            type: "success",
+            title: "Trung tâm đăng ký",
+            text: "Tạo người dùng mới thành công!",
+          });
+          loadingCreateUser.value = false;
+          toggleModalCreateNewUser();
+        });
+
+    }
+
+    return { currentTab, changeTableTab, listUser, showModalCreateUser, toggleModalCreateNewUser, isRequired, listTags, changeOptionSelect, file, tagValue, handleInputFile, profile_picture, isShowInputProfileImage, isShowImageError, isShowTagsError, onSubmitCreateNewUser, loadingCreateUser };
   },
 }
 </script>
@@ -231,11 +286,14 @@ export default {
 .input-profile-picture {
   cursor: pointer;
   margin: 0px auto;
-  background-color: #DBDADB;
   border-radius: 50%;
   width: 140px;
   height: 140px;
   position: relative;
+}
+
+.show-bg-insert-image {
+  background-color: #DBDADB;
 }
 
 img.insert-image {
@@ -263,6 +321,16 @@ img.insert-image {
 img.camera-icon {
   width: 30px;
   height: 30px;
+}
+
+img.display-insert-image {
+  border-radius: 50%;
+  width: 140px;
+  height: 140px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .input-text-container {

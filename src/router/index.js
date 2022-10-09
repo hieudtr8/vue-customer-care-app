@@ -8,7 +8,7 @@ import StatisticView from '../views/StatisticView.vue';
 const routes = [
   {
     path: '/',
-    redirect: '/login',
+    redirect: '/customer-info',
   },
   {
     path: '/login',

@@ -1,7 +1,7 @@
 <template>
   <div>
     <Multiselect mode="tags" :close-on-select="false" :searchable="true" :create-option="true" v-model="value"
-      :options="options" @change="$emit('changeOptionSelect',value)" />
+      :options="options" :change="changeOption(value)" />
   </div>
 </template>
 
@@ -15,7 +15,12 @@ export default {
   props: ['options'],
   data () {
     return {
-      value: null,
+      value: [],
+    }
+  },
+  methods: {
+    changeOption(value){
+      this.$emit('changeOptionSelect', value);
     }
   }
 }
