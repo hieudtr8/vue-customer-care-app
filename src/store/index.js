@@ -55,7 +55,7 @@ export default createStore({
           context.commit('setUser', loginUser);
           context.commit('setAuthorizationToken', authToken);
           localStorage.setItem('currentUser', JSON.stringify(user));
-          localStorage.setItem('authToken', authToken);
+          localStorage.setItem('authToken', JSON.stringify(authToken));
         }
       }
       loginUser == null

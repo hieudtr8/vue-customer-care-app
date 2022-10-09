@@ -14,7 +14,7 @@
               <input class="password" type="password" v-model="password" placeholder="********" name="password">
             </div>
             <div class="input-container-checkbox">
-              <input type="checkbox" name="remember-me" id="remember-me">
+              <input type="checkbox" name="remember-me" id="remember-me" v-model="rememberMe">
               <label for="remember-me">Ghi Nhớ ?</label>
             </div>
             <div class="error-display">
@@ -41,18 +41,32 @@ export default {
     let email = ref('');
     let password = ref('');
     let errorLogin = ref("");
-
+    const rememberMe = ref(false);
     onMounted(() => {
       try {
         store.dispatch('getListUser');
       } catch (error) {
         console.log(`error`, error);
       }
+      if (JSON.parse(localStorage.getItem('rememberedCheck'))) {
+        const rememberedLoginUser = JSON.parse(localStorage.getItem('rememberedLoginUser'))
+        email.value = rememberedLoginUser.email;
+        password.value = rememberedLoginUser.password;
+        rememberMe.value = JSON.parse(localStorage.getItem('rememberedCheck'))
+      }
     })
 
     const handleSubmit = () => {
       store.dispatch('login', { email: email.value, password: password.value })
       errorLogin.value = store.state.error
+      if (localStorage.getItem('currentUser')) {
+        if (rememberMe.value) {
+          localStorage.setItem('rememberedLoginUser', JSON.stringify({ email: email.value, password: password.value }))
+        } else {
+          localStorage.setItem('rememberedLoginUser', null)
+        }
+        localStorage.setItem('rememberedCheck', rememberMe.value)
+      }
       router.push('/customer-info')
     };
 
@@ -60,7 +74,8 @@ export default {
       email,
       password,
       errorLogin,
-      handleSubmit
+      handleSubmit,
+      rememberMe
     }
   },
 }

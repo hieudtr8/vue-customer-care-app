@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="overflow-x:auto;">
     <table id="table-user" class="table table-bordered">
       <thead>
         <tr>

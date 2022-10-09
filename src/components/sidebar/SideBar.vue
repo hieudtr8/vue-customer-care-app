@@ -36,6 +36,14 @@ export default {
 }
 </script>
 <style>
+
+@media screen and (max-width:780px) {
+  .sidebar-container svg {
+    width: 30px !important;
+    height: 30px !important;
+  }
+}
+
 .sidebar-container {
   display: flex;
   flex-direction: column;

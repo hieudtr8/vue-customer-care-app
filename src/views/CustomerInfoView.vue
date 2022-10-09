@@ -20,6 +20,17 @@
             </template>
           </Suspense>
         </div>
+        <div id="customer-table-mobile-screen" v-if="currentTab === 'customerInfo' && currentIcon === 'info'">
+          <Suspense>
+            <CustomerTable />
+            <template #fallback>
+              <div class="d-flex justify-content-center d-flex align-items-center">
+                Loading
+                <LoadingRing />
+              </div>
+            </template>
+          </Suspense>
+        </div>
       </div>
       <div id="customer-table" v-if="currentTab === 'customerInfo' && currentIcon === 'info'">
         <Suspense>
@@ -32,14 +43,14 @@
           </template>
         </Suspense>
       </div>
-      <div id="search-section" class="mx-4 d-md-block d-sm-none"
+      <div id="search-section" class="mx-4 d-none d-sm-none d-md-block"
         v-else-if="currentTab === 'search' && selectedSearchUser">
         <CustomerInfo :selectedUser="selectedSearchUser" />
       </div>
     </div>
   </div>
   <teleport to='body'>
-    <div id="modal-wrapper" @click="toggleModalSelectedSearchUser" class="d-md-none d-sm-block">
+    <div id="modal-wrapper" @click="toggleModalSelectedSearchUser" class="d-block d-sm-block d-md-none">
       <PopupModal :showModal="showSearchUserModal" @closeModal="toggleModalSelectedSearchUser">
         <template #modal-header>
           <div>
@@ -89,6 +100,20 @@ export default {
 }
 </script>
 <style>
+@media screen and (max-width:780px) {
+  #customer-info-tab {
+    width: 100%;
+  }
+
+  #customer-table {
+    display: none;
+  }
+
+  #customer-table-mobile-screen {
+    display: block !important;
+  }
+}
+
 #customer-info-container {
   width: 90%;
   min-height: 100%;
@@ -105,6 +130,10 @@ export default {
 
 #customer-table {
   width: 67%;
+}
+
+#customer-table-mobile-screen{
+  display: none;
 }
 
 #search-section {
