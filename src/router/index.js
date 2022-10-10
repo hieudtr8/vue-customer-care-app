@@ -48,9 +48,9 @@ router.beforeEach(async (to, from) => {
     return { name: 'login' };
   }
 
-  // if (localStorage.getItem('authToken') && to.name == 'login') {
-  //   return { name: 'CustomerInfo' };
-  // }
+  if (localStorage.getItem('authToken') && to.name == 'login') {
+    return { name: 'CustomerInfo' };
+  }
 
 });
 export default router;
